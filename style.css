@@ -103,3 +103,15 @@ ul {
 .mt-4 {
     margin-top: 1rem;
 }
+
+/*---INICIO-RESPONSIVE---*/
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    main {
+        padding: 0.5rem;
+    }
+}
+
+/*---FIN-RESPONSIVE---*/
