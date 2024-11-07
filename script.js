@@ -135,20 +135,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     class Carta {
-        constructor(tipo, descripcion) {
+        constructor(tipo, descripciones) {
             this.tipo = tipo;
-            this.descripcion = descripcion;
+            this.descripcion = descripciones[Math.floor(Math.random() * descripciones.length)];
         }
     }
 
     class CartaVerdad extends Carta {
         constructor() {
-            const descripciones = [
-                "¿Cuál es tu mayor miedo?",
-                "¿Cuál ha sido tu momento más vergonzoso?",
-                "¿Cuál es tu mayor secreto?"
-            ];
-            super("Verdad", descripciones[Math.floor(Math.random() * descripciones.length)]);
+            super("Verdad", ["¿Cuál es tu mayor miedo?", "¿Cuál ha sido tu momento más vergonzoso?", "¿Cuál es tu mayor secreto?"]);
         }
     }
 
