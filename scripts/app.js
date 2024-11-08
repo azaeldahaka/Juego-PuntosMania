@@ -5,11 +5,9 @@ import CartaYoNuncaNunca from './cartas/cartaYoNuncaNunca.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const juego = new Juego();
-    const formJugadores = document.getElementById('form-jugadores');
     const nombreJugadorInput = document.getElementById('nombre-jugador');
     const listaJugadores = document.getElementById('lista-jugadores');
     const agregarJugadorBtn = document.getElementById('agregar-jugador');
-    const formConfiguracion = document.getElementById('form-configuracion');
     const numRondasInput = document.getElementById('num-rondas');
     const iniciarJuegoBtn = document.getElementById('iniciar-juego');
     const seccionJuego = document.getElementById('seccion-juego');
@@ -18,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const seccionPuntos = document.getElementById('seccion-puntos');
     const listaPuntos = document.getElementById('lista-puntos');
 
-    agregarJugadorBtn.addEventListener('click', () => {
+    const agregarJugador = () => {
         const nombre = nombreJugadorInput.value.trim();
         if (nombre) {
             juego.agregarJugador(nombre);
@@ -27,13 +25,29 @@ document.addEventListener('DOMContentLoaded', () => {
             listaJugadores.appendChild(li);
             nombreJugadorInput.value = '';
         }
-    });
+    };
 
-    iniciarJuegoBtn.addEventListener('click', () => {
+    const iniciarJuego = () => {
         const numRondas = parseInt(numRondasInput.value, 10);
         if (juego.iniciarJuego(numRondas)) {
             seccionJuego.classList.remove('hidden');
             mostrarRondaActual();
+        }
+    };
+
+    agregarJugadorBtn.addEventListener('click', agregarJugador);
+    nombreJugadorInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            agregarJugador();
+        }
+    });
+
+    iniciarJuegoBtn.addEventListener('click', iniciarJuego);
+    numRondasInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            iniciarJuego();
         }
     });
 
