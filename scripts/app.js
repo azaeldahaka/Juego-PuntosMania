@@ -118,3 +118,5 @@ class JuegoDOM {
 document.addEventListener('DOMContentLoaded', () => {
     new JuegoDOM();
 });
+
+export default JuegoDOM;
