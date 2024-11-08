@@ -115,3 +115,17 @@ ul {
 }
 
 /*---FIN-RESPONSIVE---*/
+
+/*----MANEJO-DE-ERROR*/
+.hidden {
+    display: none;
+}
+
+.error-msg {
+    color: red;
+    font-weight: bold;
+}
+/*---FIN-MANEJO-DE-ERROR---*/
+
+
+

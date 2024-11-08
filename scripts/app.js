@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nombreJugadorInput = document.getElementById('nombre-jugador');
     const listaJugadores = document.getElementById('lista-jugadores');
     const agregarJugadorBtn = document.getElementById('agregar-jugador');
+    const errorMsg = document.getElementById('error-msg'); // Elemento para el mensaje de error
     const numRondasInput = document.getElementById('num-rondas');
     const iniciarJuegoBtn = document.getElementById('iniciar-juego');
     const seccionJuego = document.getElementById('seccion-juego');
@@ -24,6 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
             li.textContent = nombre;
             listaJugadores.appendChild(li);
             nombreJugadorInput.value = '';
+            errorMsg.classList.add('hidden');
+        } else {
+            errorMsg.textContent = 'Por favor ingresa un nombre de jugador.';
+            errorMsg.classList.remove('hidden');
         }
     };
 
@@ -101,3 +106,5 @@ document.addEventListener('DOMContentLoaded', () => {
         return new TipoCarta();
     };
 });
+
+
