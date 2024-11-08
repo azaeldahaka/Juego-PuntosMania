@@ -3,69 +3,82 @@ import CartaVerdad from './cartas/cartaVerdad.js';
 import CartaReto from './cartas/cartaReto.js';
 import CartaYoNuncaNunca from './cartas/cartaYoNuncaNunca.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    const juego = new Juego();
-    const nombreJugadorInput = document.getElementById('nombre-jugador');
-    const listaJugadores = document.getElementById('lista-jugadores');
-    const agregarJugadorBtn = document.getElementById('agregar-jugador');
-    const numRondasInput = document.getElementById('num-rondas');
-    const iniciarJuegoBtn = document.getElementById('iniciar-juego');
-    const seccionJuego = document.getElementById('seccion-juego');
-    const rondaActualDiv = document.getElementById('ronda-actual');
-    const siguienteRondaBtn = document.getElementById('siguiente-ronda');
-    const seccionPuntos = document.getElementById('seccion-puntos');
-    const listaPuntos = document.getElementById('lista-puntos');
+class JuegoDOM {
+    constructor() {
+        this.juego = new Juego();
+        this.initDOMElements();
+        this.addEventListeners();
+    }
 
-    const agregarJugador = () => {
-        const nombre = nombreJugadorInput.value.trim();
+    initDOMElements() {
+        this.nombreJugadorInput = document.getElementById('nombre-jugador');
+        this.listaJugadores = document.getElementById('lista-jugadores');
+        this.agregarJugadorBtn = document.getElementById('agregar-jugador');
+        this.numRondasInput = document.getElementById('num-rondas');
+        this.iniciarJuegoBtn = document.getElementById('iniciar-juego');
+        this.seccionJuego = document.getElementById('seccion-juego');
+        this.rondaActualDiv = document.getElementById('ronda-actual');
+        this.siguienteRondaBtn = document.getElementById('siguiente-ronda');
+        this.seccionPuntos = document.getElementById('seccion-puntos');
+        this.listaPuntos = document.getElementById('lista-puntos');
+        this.terminarJuegoBtn = document.getElementById('terminar-juego');
+    }
+
+    addEventListeners() {
+        this.agregarJugadorBtn.addEventListener('click', () => this.agregarJugador());
+        this.nombreJugadorInput.addEventListener('keydown', (e) => this.onEnter(e, () => this.agregarJugador()));
+        this.iniciarJuegoBtn.addEventListener('click', () => this.iniciarJuego());
+        this.numRondasInput.addEventListener('keydown', (e) => this.onEnter(e, () => this.iniciarJuego()));
+        this.siguienteRondaBtn.addEventListener('click', () => this.siguienteRonda());
+        this.terminarJuegoBtn.addEventListener('click', () => this.terminarJuego());
+    }
+
+    onEnter(event, action) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            action();
+        }
+    }
+
+    agregarJugador() {
+        const nombre = this.nombreJugadorInput.value.trim();
         if (nombre) {
-            juego.agregarJugador(nombre);
+            this.juego.agregarJugador(nombre);
             const li = document.createElement('li');
             li.textContent = nombre;
-            listaJugadores.appendChild(li);
-            nombreJugadorInput.value = '';
+            this.listaJugadores.appendChild(li);
+            this.nombreJugadorInput.value = '';
         }
-    };
+    }
 
-    const iniciarJuego = () => {
-        const numRondas = parseInt(numRondasInput.value, 10);
-        if (juego.iniciarJuego(numRondas)) {
-            seccionJuego.classList.remove('hidden');
-            mostrarRondaActual();
+    iniciarJuego() {
+        const numRondas = parseInt(this.numRondasInput.value, 10);
+        if (this.juego.iniciarJuego(numRondas)) {
+            this.seccionJuego.classList.remove('hidden');
+            this.mostrarRondaActual();
         }
-    };
+    }
 
-    agregarJugadorBtn.addEventListener('click', agregarJugador);
-    nombreJugadorInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            agregarJugador();
-        }
-    });
-
-    iniciarJuegoBtn.addEventListener('click', iniciarJuego);
-    numRondasInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            iniciarJuego();
-        }
-    });
-
-    siguienteRondaBtn.addEventListener('click', () => {
-        const resultadoSelect = document.getElementById(`resultado-${juego.obtenerJugadorActual().nombre}-${juego.rondaActual}`);
+    siguienteRonda() {
+        const resultadoSelect = document.getElementById(`resultado-${this.juego.obtenerJugadorActual().nombre}-${this.juego.rondaActual}`);
         const resultado = resultadoSelect.value;
 
-        if (juego.siguienteRonda(resultado)) {
-            mostrarPuntosFinales();
+        if (this.juego.siguienteRonda(resultado)) {
+            this.mostrarPuntosFinales();
         } else {
-            mostrarRondaActual();
+            this.mostrarRondaActual();
         }
-    });
+    }
 
-    const mostrarRondaActual = () => {
-        rondaActualDiv.innerHTML = '';
-        const jugador = juego.obtenerJugadorActual();
-        const carta = seleccionarCartaAleatoria();
+    terminarJuego() {
+        alert('Juego terminado!');
+        this.mostrarPuntosFinales();
+    }
+
+    mostrarRondaActual() {
+        this.rondaActualDiv.innerHTML = '';
+        const jugador = this.juego.obtenerJugadorActual();
+        const carta = this.seleccionarCartaAleatoria();
         const cartaDiv = document.createElement('div');
         cartaDiv.classList.add('p-4', 'bg-white', 'rounded', 'shadow', 'mb-4', 'border', 'border-gray-300');
         cartaDiv.innerHTML = `
@@ -74,30 +87,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="text-xl font-bold">${carta.tipo}</p>
                 <p class="text-md">${carta.descripcion}</p>
             </div>
-            <label for="resultado-${jugador.nombre}-${juego.rondaActual}" class="block mt-4 mb-2">¿Cuál fue tu resultado?</label>
-            <select id="resultado-${jugador.nombre}-${juego.rondaActual}" class="w-full p-2 border border-gray-300 rounded">
+            <label for="resultado-${jugador.nombre}-${this.juego.rondaActual}" class="block mt-4 mb-2">¿Cuál fue tu resultado?</label>
+            <select id="resultado-${jugador.nombre}-${this.juego.rondaActual}" class="w-full p-2 border border-gray-300 rounded">
                 <option value="lo cumplió">Lo cumplió</option>
                 <option value="no lo cumplió">No lo cumplió</option>
                 <option value="a medias">A medias</option>
             </select>
         `;
-        rondaActualDiv.appendChild(cartaDiv);
-    };
+        this.rondaActualDiv.appendChild(cartaDiv);
+    }
 
-    const mostrarPuntosFinales = () => {
-        seccionJuego.classList.add('hidden');
-        seccionPuntos.classList.remove('hidden');
-        listaPuntos.innerHTML = '';
-        juego.obtenerPuntosFinales().forEach(puntos => {
+    mostrarPuntosFinales() {
+        this.seccionJuego.classList.add('hidden');
+        this.seccionPuntos.classList.remove('hidden');
+        this.listaPuntos.innerHTML = '';
+        this.juego.obtenerPuntosFinales().forEach(puntos => {
             const li = document.createElement('li');
             li.textContent = puntos;
-            listaPuntos.appendChild(li);
+            this.listaPuntos.appendChild(li);
         });
-    };
+    }
 
-    const seleccionarCartaAleatoria = () => {
+    seleccionarCartaAleatoria() {
         const tiposCarta = [CartaVerdad, CartaReto, CartaYoNuncaNunca];
         const TipoCarta = tiposCarta[Math.floor(Math.random() * tiposCarta.length)];
         return new TipoCarta();
-    };
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    new JuegoDOM();
 });
